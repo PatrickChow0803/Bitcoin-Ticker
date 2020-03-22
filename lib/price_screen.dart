@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'coin_data.dart';
 import 'package:flutter/cupertino.dart';
 
+// Used to know which OS is being used
+// I only want to use the Platform class, now the entire directory. (External Libraries -> Dart SDK -> io -> platform.dart
+import 'dart:io' show Platform;
+
 import 'coin_data.dart';
 
 class PriceScreen extends StatefulWidget {
@@ -12,8 +16,8 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = 'USD';
 
-  // Creates the list of currencies
-  List<DropdownMenuItem> getDropDownItems() {
+  // Creates the drop down button and fills it with items
+  DropdownButton<String> androidDropDown() {
     // List of widgets to hold the dropDownMenuItems
     // <String> because that's the child type
     List<DropdownMenuItem<String>> dropDownItems = [];
@@ -28,17 +32,57 @@ class _PriceScreenState extends State<PriceScreen> {
       dropDownItems.add(newItem);
     }
 
-    return dropDownItems;
+    return DropdownButton(
+      // Value is the default text that's on the button
+      value: selectedCurrency,
+      items: dropDownItems,
+      //                DropdownMenuItem(
+      //                  child: Text('USD'),
+      //                  value: 'USD',
+      //                ),
+      //                DropdownMenuItem(
+      //                  child: Text('EUR'),
+      //                  value: 'EUR',
+      //                ),
+      //                DropdownMenuItem(
+      //                  child: Text('GBP'),
+      //                  value: 'GBP',
+      //                )
+      onChanged: (value) {
+        setState(() {
+          selectedCurrency = value;
+        });
+        print(value);
+      },
+    );
   }
 
-  List<Text> getPickerItems() {
+  // Creates the iOSPicker and the items.
+  CupertinoPicker iOSPicker() {
     List<Text> currencies = [];
     for (String currency in currenciesList) {
       var newItem = Text(currency);
       currencies.add(newItem);
 //      Or I can do currencies.add(Text(currency));
     }
-    return currencies;
+
+    return CupertinoPicker(
+      backgroundColor: Colors.lightBlue,
+      itemExtent: 32.0,
+      onSelectedItemChanged: (selectedCurrency) {
+        print(selectedCurrency);
+      },
+      children: currencies,
+    );
+  }
+
+  // Function that determines which picker to display depending on what platform is being used.
+  Widget getPicker() {
+    if (Platform.isAndroid) {
+      return androidDropDown();
+    } else {
+      return iOSPicker();
+    }
   }
 
   @override
@@ -80,40 +124,12 @@ class _PriceScreenState extends State<PriceScreen> {
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
 //            Drop down button with multiple selection for the user to pick.
-            child: CupertinoPicker(
-              backgroundColor: Colors.lightBlue,
-              itemExtent: 32.0,
-              onSelectedItemChanged: (selectedCurrency) {
-                print(selectedCurrency);
-              },
-              children: getPickerItems(),
-            ),
+//            child: getPicker(),
+            // This is another way of determining which picker to display.
+            child: Platform.isAndroid ? androidDropDown() : iOSPicker(),
           ),
         ],
       ),
     );
   }
 }
-
-//DropdownButton(
-//value: selectedCurrency,
-//items: getDropDownItems(),
-////                DropdownMenuItem(
-////                  child: Text('USD'),
-////                  value: 'USD',
-////                ),
-////                DropdownMenuItem(
-////                  child: Text('EUR'),
-////                  value: 'EUR',
-////                ),
-////                DropdownMenuItem(
-////                  child: Text('GBP'),
-////                  value: 'GBP',
-////                )
-//onChanged: (value) {
-//setState(() {
-//selectedCurrency = value;
-//});
-//print(value);
-//},
-//),
