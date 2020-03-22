@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'coin_data.dart';
+import 'coin_data.dart';
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -6,8 +8,31 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
+  String selectedCurrency = 'USD';
+
+  // Creates the list of currencies
+  List<DropdownMenuItem> getDropDownItems() {
+    // List of widgets to hold the dropDownMenuItems
+    // <String> because that's the child type
+    List<DropdownMenuItem<String>> dropDownItems = [];
+    for (String currency in currenciesList) {
+      print(currency);
+      var newItem = DropdownMenuItem(
+        child: Text(currency),
+        value: currency,
+      );
+
+      // Add each newItem into the list of widgets
+      dropDownItems.add(newItem);
+    }
+
+    return dropDownItems;
+  }
+
   @override
   Widget build(BuildContext context) {
+    getDropDownItems();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('🤑 Coin Ticker'),
@@ -42,7 +67,29 @@ class _PriceScreenState extends State<PriceScreen> {
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
-            child: null,
+//            Drop down button with multiple selection for the user to pick.
+            child: DropdownButton(
+              value: selectedCurrency,
+              items: getDropDownItems(),
+//                DropdownMenuItem(
+//                  child: Text('USD'),
+//                  value: 'USD',
+//                ),
+//                DropdownMenuItem(
+//                  child: Text('EUR'),
+//                  value: 'EUR',
+//                ),
+//                DropdownMenuItem(
+//                  child: Text('GBP'),
+//                  value: 'GBP',
+//                )
+              onChanged: (value) {
+                setState(() {
+                  selectedCurrency = value;
+                });
+                print(value);
+              },
+            ),
           ),
         ],
       ),
