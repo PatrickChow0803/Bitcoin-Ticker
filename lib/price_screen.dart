@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'coin_data.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'coin_data.dart';
 
 class PriceScreen extends StatefulWidget {
@@ -16,7 +18,7 @@ class _PriceScreenState extends State<PriceScreen> {
     // <String> because that's the child type
     List<DropdownMenuItem<String>> dropDownItems = [];
     for (String currency in currenciesList) {
-      print(currency);
+//      print(currency);
       var newItem = DropdownMenuItem(
         child: Text(currency),
         value: currency,
@@ -29,9 +31,19 @@ class _PriceScreenState extends State<PriceScreen> {
     return dropDownItems;
   }
 
+  List<Text> getPickerItems() {
+    List<Text> currencies = [];
+    for (String currency in currenciesList) {
+      var newItem = Text(currency);
+      currencies.add(newItem);
+//      Or I can do currencies.add(Text(currency));
+    }
+    return currencies;
+  }
+
   @override
   Widget build(BuildContext context) {
-    getDropDownItems();
+//    getDropDownItems();
 
     return Scaffold(
       appBar: AppBar(
@@ -68,27 +80,13 @@ class _PriceScreenState extends State<PriceScreen> {
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
 //            Drop down button with multiple selection for the user to pick.
-            child: DropdownButton(
-              value: selectedCurrency,
-              items: getDropDownItems(),
-//                DropdownMenuItem(
-//                  child: Text('USD'),
-//                  value: 'USD',
-//                ),
-//                DropdownMenuItem(
-//                  child: Text('EUR'),
-//                  value: 'EUR',
-//                ),
-//                DropdownMenuItem(
-//                  child: Text('GBP'),
-//                  value: 'GBP',
-//                )
-              onChanged: (value) {
-                setState(() {
-                  selectedCurrency = value;
-                });
-                print(value);
+            child: CupertinoPicker(
+              backgroundColor: Colors.lightBlue,
+              itemExtent: 32.0,
+              onSelectedItemChanged: (selectedCurrency) {
+                print(selectedCurrency);
               },
+              children: getPickerItems(),
             ),
           ),
         ],
@@ -96,3 +94,26 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 }
+
+//DropdownButton(
+//value: selectedCurrency,
+//items: getDropDownItems(),
+////                DropdownMenuItem(
+////                  child: Text('USD'),
+////                  value: 'USD',
+////                ),
+////                DropdownMenuItem(
+////                  child: Text('EUR'),
+////                  value: 'EUR',
+////                ),
+////                DropdownMenuItem(
+////                  child: Text('GBP'),
+////                  value: 'GBP',
+////                )
+//onChanged: (value) {
+//setState(() {
+//selectedCurrency = value;
+//});
+//print(value);
+//},
+//),
